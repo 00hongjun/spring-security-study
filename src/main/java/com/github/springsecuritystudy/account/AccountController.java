@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class AccountControler {
+public class AccountController {
 
     private final AccountRepository accountRepository;
     private final AccountService accountService;
