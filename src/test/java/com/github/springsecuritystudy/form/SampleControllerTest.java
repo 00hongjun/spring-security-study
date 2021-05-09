@@ -1,11 +1,16 @@
 package com.github.springsecuritystudy.form;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.github.springsecuritystudy.account.Account;
+import com.github.springsecuritystudy.account.AccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -21,6 +27,8 @@ class SampleControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    AccountService accountService;
 
     @DisplayName("/ path는 권한 없이 접근 가능 하다")
     @Test
@@ -105,6 +113,44 @@ class SampleControllerTest {
         mockMvc.perform(get("/admin"))
             .andDo(print())
             .andExpect(status().isOk());
+    }
+
+    @Transactional
+    @DisplayName("폼 로그인 테스트")
+    @Test
+    void login() throws Exception {
+        // given
+        String username = "hong";
+        String password = "123";
+        Account account = extractUser(username, password);
+
+        // when
+        mockMvc.perform(formLogin().user(username).password(password))
+            .andExpect(authenticated());
+    }
+
+    @Transactional
+    @DisplayName("폼 로그인 테스트 - 로그인 실패")
+    @Test
+    void login_fail() throws Exception {
+        // given
+        String username = "hong";
+        String password = "123";
+        Account account = extractUser(username, password);
+
+        // when
+        mockMvc.perform(formLogin().user(username).password("123456"))
+            .andExpect(unauthenticated());
+    }
+
+    private Account extractUser(String username, String password) {
+        Account account = new Account();
+        account.setUsername(username);
+        account.setPassword(password);
+        account.setRole("USER");
+
+        accountService.createNew(account);
+        return account;
     }
 
 }
