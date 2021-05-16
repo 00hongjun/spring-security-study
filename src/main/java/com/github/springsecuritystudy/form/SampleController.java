@@ -1,12 +1,16 @@
 package com.github.springsecuritystudy.form;
 
 import java.security.Principal;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
+@RequiredArgsConstructor
 public class SampleController {
+
+    private final SampleService sampleService;
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
@@ -29,6 +33,7 @@ public class SampleController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
         model.addAttribute("message", "hello Admin" + principal.getName());
+        sampleService.dashboard();
         return "dashboard";
     }
 
