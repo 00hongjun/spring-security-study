@@ -1,5 +1,7 @@
 package com.github.springsecuritystudy.form;
 
+import com.github.springsecuritystudy.account.AccountContext;
+import com.github.springsecuritystudy.account.AccountRepository;
 import java.security.Principal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SampleController {
 
     private final SampleService sampleService;
+    private final AccountRepository accountRepository;
 
     @GetMapping("/")
     public String index(Model model, Principal principal) {
@@ -33,7 +36,9 @@ public class SampleController {
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
         model.addAttribute("message", "hello Admin" + principal.getName());
+        AccountContext.setAccount(accountRepository.findByUsername(principal.getName()).get());
         sampleService.dashboard();
+        sampleService.dashboard2();
         return "dashboard";
     }
 
