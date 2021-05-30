@@ -35,7 +35,7 @@ public class SampleController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model, Principal principal) {
-        model.addAttribute("message", "hello Admin" + principal.getName());
+        model.addAttribute("message", "hello Dashboard : " + principal.getName());
         AccountContext.setAccount(accountRepository.findByUsername(principal.getName()).get());
         sampleService.dashboard();
         sampleService.dashboard2();
@@ -44,8 +44,14 @@ public class SampleController {
 
     @GetMapping("/admin")
     public String admin(Model model, Principal principal) {
-        model.addAttribute("message", "hello Admin" + principal.getName());
+        model.addAttribute("message", "hello Admin : " + principal.getName());
         return "admin";
+    }
+
+    @GetMapping("/user")
+    public String user(Model model, Principal principal) {
+        model.addAttribute("message", "hello User : " + principal.getName());
+        return "user";
     }
 
 }
