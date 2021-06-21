@@ -110,9 +110,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                }
 //            });
 
-        http.rememberMe()
-            .userDetailsService(accountService)
-            .key("remember-me");
+//        http.rememberMe()
+//            .userDetailsService(accountService)
+//            .key("remember-me");
 
         SecurityContextHolder.setStrategyName(
             SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 하위 스레드에도 인증 정보 유지 -> SecurityContext 공유
