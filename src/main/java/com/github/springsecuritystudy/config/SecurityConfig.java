@@ -1,12 +1,15 @@
 package com.github.springsecuritystudy.config;
 
+import com.github.springsecuritystudy.account.AccountService;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,7 +35,10 @@ import org.springframework.security.web.access.expression.WebExpressionVoter;
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private AccountService accountService;
 
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
@@ -103,6 +109,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                    response.sendRedirect("/access-denied");
 //                }
 //            });
+
+        http.rememberMe()
+            .userDetailsService(accountService)
+            .key("remember-me");
 
         SecurityContextHolder.setStrategyName(
             SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 하위 스레드에도 인증 정보 유지 -> SecurityContext 공유
