@@ -1,11 +1,15 @@
 package com.github.springsecuritystudy.form;
 
+import com.github.springsecuritystudy.account.Account;
 import com.github.springsecuritystudy.account.AccountContext;
 import com.github.springsecuritystudy.account.AccountRepository;
+import com.github.springsecuritystudy.account.UserAccount;
+import com.github.springsecuritystudy.common.CurrentUser;
 import com.github.springsecuritystudy.common.SecurityLogger;
 import java.security.Principal;
 import java.util.concurrent.Callable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,12 +23,17 @@ public class SampleController {
     private final AccountRepository accountRepository;
 
     @GetMapping("/")
-    public String index(Model model, Principal principal) {
+//    public String index(Model model, Principal principal) {
+//    public String index(Model model, @AuthenticationPrincipal UserAccount userAccount) {
+//    public String index(Model model, @AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account") Account userAccount) {
+    public String index(Model model, @CurrentUser Account userAccount) {
 
-        if (principal == null) {
+//        if (principal == null) {
+        if (userAccount == null) {
             model.addAttribute("message", "hello spring security");
         } else {
-            model.addAttribute("message", "hello " + principal.getName());
+//            model.addAttribute("message", "hello " + principal.getName());
+            model.addAttribute("message", "hello " + userAccount.getUsername());
         }
 
         return "index";
