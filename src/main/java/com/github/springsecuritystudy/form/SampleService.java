@@ -4,8 +4,11 @@ import com.github.springsecuritystudy.account.Account;
 import com.github.springsecuritystudy.account.AccountContext;
 import com.github.springsecuritystudy.common.SecurityLogger;
 import java.util.Collection;
+import javax.annotation.security.RolesAllowed;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,6 +19,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class SampleService {
 
+//    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_USER")
+//    @RolesAllowed("ROLE_USER")
+//    @PreAuthorize("hasRole('USER')")
     public void dashboard() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authentication = context.getAuthentication();
