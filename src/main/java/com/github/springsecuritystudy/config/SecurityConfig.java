@@ -1,6 +1,7 @@
 package com.github.springsecuritystudy.config;
 
 import com.github.springsecuritystudy.account.AccountService;
+import com.github.springsecuritystudy.common.LoggingFilter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 @Slf4j
 @Configuration
@@ -95,8 +97,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.sessionManagement()
 //            .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.exceptionHandling()
-            .accessDeniedPage("/access-denied");
+//        http.exceptionHandling()
+//            .accessDeniedPage("/access-denied");
 
 //        http.exceptionHandling()
 //            .accessDeniedHandler(new AccessDeniedHandler() {
@@ -114,6 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //            .userDetailsService(accountService)
 //            .key("remember-me");
 
+        http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class);
         SecurityContextHolder.setStrategyName(
             SecurityContextHolder.MODE_INHERITABLETHREADLOCAL); // 하위 스레드에도 인증 정보 유지 -> SecurityContext 공유
     }
